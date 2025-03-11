@@ -1,0 +1,7 @@
+com\training\productapp\controller\ProductController.class
+com\training\productapp\service\IProductService.class
+com\training\productapp\ValueRefreshConfigBean.class
+com\training\productapp\domain\Product.class
+com\training\productapp\service\ProductServiceImpl.class
+com\training\productapp\repository\IProductRepository.class
+com\training\productapp\ProductappApplication.class
