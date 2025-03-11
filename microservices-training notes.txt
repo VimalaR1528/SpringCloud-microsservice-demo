@@ -1,0 +1,92 @@
+Service registry - Netfilx Eureka Server
+
+1. Create a Spring Starter project 
+
+2. Pom.xml
+	<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+		</dependency>
+
+3. application.properties file
+	server.port=8761
+
+	eureka.client.register-with-eureka=false
+
+	eureka.client.fetch-registry=false
+
+4. Main class
+	@EnableEurekaServer
+
+------------------------------------------
+Service Provider -  Netflix Eureka Client
+
+1. Use the Storeapp
+
+2. 2. Pom.xml
+	<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-clientr</artifactId>
+		</dependency>
+
+3. application.properties
+
+	eureka.client.serviceUrl.defaultZone=http://localhost:8080/eureka
+	eureka.instance.preferIpAddress=true
+
+4. @EnableDiscoveryClient
+
+------------------------------------------------------
+
+Client side Load Balancing with Ribbon
+
+1. Create a Spring Boot project  - Eureka + Ribbon
+
+2. Dependencies: Eureka Discovery client, web, Actuator
+
+3. application.properties
+	server.port=9997
+
+	eureka.client.service-url.defaultZone=http://localhost:8761/eureka
+
+	eureka.client.register-with-eureka=false
+
+4. Config class
+	RestTemplate - @LoadBalanced
+
+5. Controller - define the Rest API
+
+6. http://localhost:9997/get-products/4
+
+..............................................................
+
+Client side Load Balancing with Feign:
+
+1. Create a Spring Boot project  - Eureka + Feign
+
+2. Dependencies: Eureka Discovery client, web, Actuator, OpenFeign
+
+3. application.properties
+	server.port=9996
+
+	eureka.client.service-url.defaultZone=http://localhost:8761/eureka
+
+	eureka.client.register-with-eureka=false
+
+4.  Create Interface- ProductProxy
+	@FeignClient("product-service")
+
+5. Controller &  Service - Autowire the ProductProxy
+
+6. Application class - @EnableFeignClient 
+
+6. http://localhost:9996/get-products/4
+
+..............................................................
+
+
+
+
+
+
+

@@ -1,0 +1,1240 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fnil Courier New;}{\f2\fnil\fcharset0 Courier New;}}
+{\colortbl ;\red127\green0\blue85;\red0\green0\blue0;\red100\green100\blue100;\red0\green0\blue192;\red106\green62\blue62;\red42\green0\blue255;\red63\green127\blue95;\red127\green159\blue191;\red181\green137\blue0;\red38\green139\blue210;\red147\green161\blue161;\red0\green0\blue255;\red42\green161\blue152;\red232\green242\blue254;\red51\green51\blue51;\red219\green236\blue207;\red212\green212\blue212;}
+{\*\generator Riched20 10.0.17763}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang9 Microservices - S1\par
+\par
+Feb 2025\par
+.......................................................................................................................................\par
+\b Software required:\b0\par
+JDK 17\par
+STS 4\par
+Postman\par
+MySQL\par
+.........................\par
+STS 4 installation\par
+URL: Previous Versions \'b7 spring-projects/sts4 Wiki \'b7 GitHub\par
+1. Download 4.17.2 jar file\par
+2. Open command prompt and type\par
+java -jar spring-tool-suite-4-4.17.0.RELEASE-e4.26.0-win32.win32.x86_64.self-extracting.jar\par
+STS folder is extracted\par
+3.[To know about java version that supports the STS, we can get from configuration file inside the STS folder]\par
+4. [Check compiler, jdk, jre version in the STS\par
+\tab Windows -> Preferences -> Java -> Compiler -> check for jdk version\par
+\tab Or\par
+\tab Check Installed JRE and add accordingly]\par
+.........................................................................................................................................\par
+\par
+DEMO\par
+\par
+DEMO 1:\par
+1. Create a Spring Starter Project\par
+\tab Maven, Java, Jar, Java version 17\par
+\tab Dependency: Spring web, Spring Data JPA, H2 Database, Spring Boot actuator, Spring Boot Devtools, Lombok\par
+\cf1\b\f1\fs20 package\cf2\b0  com.training.productapp;\cf0\par
+\par
+\cf1\b import\cf2\b0  org.springframework.beans.factory.annotation.Autowired;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.boot.CommandLineRunner;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.boot.SpringApplication;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.boot.autoconfigure.SpringBootApplication;\cf0\par
+\par
+\cf1\b import\cf2\b0  com.training.productapp.domain.Product;\cf0\par
+\cf1\b import\cf2\b0  com.training.productapp.repository.IProductRepository;\cf0\par
+\par
+\cf2  \cf3 @SpringBootApplication\cf0\par
+\cf1\b public\cf2\b0  \cf1\b class\cf2\b0  ProductappApplication \cf1\b implements\cf2\b0  CommandLineRunner \{\cf0\par
+\par
+\cf2\tab\cf0\par
+\cf2\tab\cf3 @Autowired\cf0\par
+\cf2\tab IProductRepository \cf4 repository\cf2 ;\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b static\cf2\b0  \cf1\b void\cf2\b0  main(String[] \cf5 args\cf2 ) \{\cf0\par
+\cf2\tab\tab SpringApplication.\i run\i0 (ProductappApplication.\cf1\b class\cf2\b0 , \cf5 args\cf2 );\cf0\par
+\cf2\tab\}\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\cf3 @Override\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b void\cf2\b0  run(String... \cf5 args\cf2 ) \cf1\b throws\cf2\b0  Exception \{\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\tab\cf4 repository\cf2 .save(\cf1\b new\cf2\b0  Product(\cf1\b null\cf2\b0 , \cf6 "LG"\cf2 , 10345.66));\cf0\par
+\cf2\tab\tab\cf4 repository\cf2 .save(\cf1\b new\cf2\b0  Product(\cf1\b null\cf2\b0 , \cf6 "NOKIA"\cf2 , 20345.66));\cf0\par
+\cf2\tab\tab\cf4 repository\cf2 .save(\cf1\b new\cf2\b0  Product(\cf1\b null\cf2\b0 , \cf6 "ONIDA"\cf2 , 30345.66));\cf0\par
+\cf2\tab\tab\cf4 repository\cf2 .save(\cf1\b new\cf2\b0  Product(\cf1\b null\cf2\b0 , \cf6 "APPLE"\cf2 , 40345.66));\cf0\par
+\cf2\tab\tab\cf4 repository\cf2 .save(\cf1\b new\cf2\b0  Product(\cf1\b null\cf2\b0 , \cf6 "SAMSUNG"\cf2 , 50345.66));\cf0\par
+\cf2\tab\tab\cf0\par
+\cf2\tab\tab System.\cf4\b\i out\cf2\b0\i0 .println(\cf6 "--------Data saved in H2 Database---------"\cf2 );\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\}\cf0\par
+\par
+\f0\fs22 ===============================\par
+\cf1\b\f1\fs20 package\cf2\b0  com.training.productapp.controller;\cf0\par
+\par
+\cf1\b import\cf2\b0  java.util.List;\cf0\par
+\par
+\cf1\b import\cf2\b0  org.springframework.beans.factory.annotation.Autowired;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.http.HttpStatus;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.http.MediaType;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.web.bind.annotation.DeleteMapping;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.web.bind.annotation.GetMapping;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.web.bind.annotation.PatchMapping;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.web.bind.annotation.PathVariable;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.web.bind.annotation.PostMapping;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.web.bind.annotation.PutMapping;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.web.bind.annotation.RequestBody;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.web.bind.annotation.RequestMapping;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.web.bind.annotation.ResponseStatus;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.web.bind.annotation.RestController;\cf0\par
+\par
+\cf1\b import\cf2\b0  com.training.productapp.domain.Product;\cf0\par
+\cf1\b import\cf2\b0  com.training.productapp.service.IProductService;\cf0\par
+\par
+\par
+\cf3 @RestController\cf0\par
+\cf3 @RequestMapping\cf2 (\cf6 "/products"\cf2 )\cf0\par
+\cf1\b public\cf2\b0  \cf1\b class\cf2\b0  ProductController \{\cf0\par
+\par
+\cf3 @Autowired\cf2\tab\cf0\par
+\cf1\b private\cf2\b0  IProductService \cf4 productService\cf2 ;\cf0\par
+\par
+\par
+\cf3 @GetMapping\cf2 (produces = MediaType.\cf4\b\i APPLICATION_JSON_VALUE\cf2\b0\i0 )\cf0\par
+\cf1\b public\cf2\b0  List<Product> getAllProducts()\{\cf0\par
+\cf2\tab\cf1\b return\cf2\b0  \cf4 productService\cf2 .findAllProducts();\cf0\par
+\cf2\}\cf0\par
+\par
+\cf3 @GetMapping\cf2 (\cf6 "/\{id\}"\cf2 )\cf0\par
+\cf1\b public\cf2\b0  Product getProductById(\cf3 @PathVariable\cf2 (\cf6 "id"\cf2 )Integer \cf5 productId\cf2 )\{\cf0\par
+\cf2\tab\cf1\b return\cf2\b0  \cf4 productService\cf2 .findProductById(\cf5 productId\cf2 );\cf0\par
+\cf2\}\cf0\par
+\par
+\cf3 @DeleteMapping\cf2 (\cf6 "/\{id\}"\cf2 )\cf0\par
+\cf3 @ResponseStatus\cf2 (code = HttpStatus.\cf4\b\i NO_CONTENT\cf2\b0\i0 )\cf0\par
+\par
+\cf1\b public\cf2\b0  \cf1\b void\cf2\b0  deleteProductById(\cf3 @PathVariable\cf2 (\cf6 "id"\cf2 )Integer \cf5 productId\cf2 )\{\cf0\par
+\cf4 productService\cf2 .deleteProduct(\cf5 productId\cf2 );\cf0\par
+\cf2\}\cf0\par
+\par
+\cf3 @PatchMapping\cf2 (\cf6 "/\{id\}/\{price\}"\cf2 )\cf0\par
+\cf1\b public\cf2\b0  Product updateProductPrice(\cf3 @PathVariable\cf2 (\cf6 "id"\cf2 )Integer \cf5 productId\cf2 ,\cf3 @PathVariable\cf2 (\cf6 "price"\cf2 ) Double \cf5 productPrice\cf2 )\{\cf0\par
+\cf2\tab\cf1\b return\cf2\b0  \cf4 productService\cf2 .updateProductPrice(\cf5 productId\cf2 , \cf5 productPrice\cf2 );\cf0\par
+\cf2\}\cf0\par
+\par
+\par
+\cf3 @PostMapping\cf0\par
+\cf3 @ResponseStatus\cf2 (code = HttpStatus.\cf4\b\i CREATED\cf2\b0\i0 )\cf0\par
+\cf1\b public\cf2\b0  Product addProduct(\cf3 @RequestBody\cf2  Product \cf5 product\cf2 )\{\cf0\par
+\cf2\tab\cf1\b return\cf2\b0  \cf4 productService\cf2 .addProduct(\cf5 product\cf2 );\cf0\par
+\cf2\}\cf0\par
+\par
+\par
+\cf3 @PutMapping\cf0\par
+\cf3 @ResponseStatus\cf2 (code = HttpStatus.\cf4\b\i OK\cf2\b0\i0 )\cf0\par
+\cf1\b public\cf2\b0  Product updateProduct(\cf3 @RequestBody\cf2  Product \cf5 product\cf2 )\{\cf0\par
+\cf2\tab\cf1\b return\cf2\b0  \cf4 productService\cf2 .updateProduct(\cf5 product\cf2 );\cf0\par
+\cf2\}\cf0\par
+\f2\lang1033\}\par
+=====================================\par
+\cf1\b\f1 package\cf2\b0  com.training.productapp.domain;\cf0\par
+\cf2  \cf0\par
+\par
+\cf1\b import\cf2\b0  jakarta.persistence.Column;\cf0\par
+\cf1\b import\cf2\b0  jakarta.persistence.Entity;\cf0\par
+\cf1\b import\cf2\b0  jakarta.persistence.GeneratedValue;\cf0\par
+\cf1\b import\cf2\b0  jakarta.persistence.GenerationType;\cf0\par
+\cf1\b import\cf2\b0  jakarta.persistence.Id;\cf0\par
+\cf1\b import\cf2\b0  jakarta.persistence.Table;\cf0\par
+\cf7 //import lombok.AllArgsConstructor;\cf0\par
+\cf7 //import lombok.Data;\cf0\par
+\cf7 //import lombok.NoArgsConstructor;\cf0\par
+\par
+\cf7 //@Data\cf0\par
+\cf3 @Entity\cf0\par
+\cf7 //@NoArgsConstructor\cf0\par
+\cf7 //@AllArgsConstructor\cf0\par
+\cf3 @Table\cf2 (name = \cf6 "Products"\cf2 )\cf0\par
+\cf1\b public\cf2\b0  \cf1\b class\cf2\b0  Product \{\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\cf3 @Id\cf0\par
+\cf2\tab\cf3 @GeneratedValue\cf2 (strategy = GenerationType.\cf4\b\i AUTO\cf2\b0\i0 )\cf0\par
+\cf2\tab\cf1\b private\cf2\b0  Integer \cf4 id\cf2 ;\cf0\par
+\cf2\tab\cf1\b private\cf2\b0  String \cf4 name\cf2 ;\cf0\par
+\cf2\tab\cf3 @Column\cf2 (name = \cf6 "product_price"\cf2 )\cf0\par
+\cf2\tab\cf1\b private\cf2\b0  Double \cf4 price\cf2 ;\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  Product() \{\cf0\par
+\cf2\tab\tab\cf7 // \cf8\b TODO\cf7\b0  Auto-generated constructor stub\cf0\par
+\cf2\tab\}\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  Product(Integer \cf5 id\cf2 , String \cf5 name\cf2 , Double \cf5 price\cf2 ) \{\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf4 id\cf2  = \cf5 id\cf2 ;\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf4 name\cf2  = \cf5 name\cf2 ;\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf4 price\cf2  = \cf5 price\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\par
+\par
+\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  Integer getId() \{\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 id\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b void\cf2\b0  setId(Integer \cf5 id\cf2 ) \{\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf4 id\cf2  = \cf5 id\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  String getName() \{\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 name\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b void\cf2\b0  setName(String \cf5 name\cf2 ) \{\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf4 name\cf2  = \cf5 name\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  Double getPrice() \{\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 price\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b void\cf2\b0  setPrice(Double \cf5 price\cf2 ) \{\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf4 price\cf2  = \cf5 price\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf3 @Override\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  String toString() \{\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf6 "Product [id="\cf2  + \cf4 id\cf2  + \cf6 ", name="\cf2  + \cf4 name\cf2  + \cf6 ", price="\cf2  + \cf4 price\cf2  + \cf6 "]"\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\cf2\}\cf0\par
+\f2 ==============================================\par
+\cf1\b\f1 package\cf2\b0  com.training.productapp.repository;\cf0\par
+\par
+\par
+\cf1\b import\cf2\b0  org.springframework.data.jpa.repository.JpaRepository;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.stereotype.Repository;\cf0\par
+\par
+\cf1\b import\cf2\b0  com.training.productapp.domain.Product;\cf0\par
+\cf2  \cf0\par
+\par
+\cf3 @Repository\cf0\par
+\cf1\b public\cf2\b0  \cf1\b interface\cf2\b0  IProductRepository \cf1\b extends\cf2\b0  JpaRepository<Product, Integer>\{\cf0\par
+\par
+\cf2\}\cf0\par
+\f2 =========================================\par
+\cf1\b\f1 package\cf2\b0  com.training.productapp.service;\cf0\par
+\cf2  \cf0\par
+\par
+\cf1\b import\cf2\b0  java.util.List;\cf0\par
+\par
+\cf1\b import\cf2\b0  com.training.productapp.domain.Product;\cf0\par
+\par
+\cf1\b public\cf2\b0  \cf1\b interface\cf2\b0  IProductService \{\cf0\par
+\par
+\cf2\tab Product addProduct(Product \cf5 product\cf2 );\cf0\par
+\cf2\tab Product updateProduct(Product \cf5 product\cf2 );\cf0\par
+\cf2\tab Product updateProductPrice(Integer \cf5 productId\cf2 ,Double \cf5 productPrice\cf2 );\cf0\par
+\cf2\tab Product findProductById(Integer \cf5 productId\cf2 );\cf0\par
+\cf2\tab List<Product> findAllProducts();\cf0\par
+\cf2\tab\cf1\b void\cf2\b0  deleteProduct(Integer \cf5 productId\cf2 );\cf0\par
+\cf2\tab\}\cf0\par
+\f2\lang9\par
+\f0\fs22 ===================================================\par
+\cf1\b\f1\fs20 package\cf2\b0  com.training.productapp.service;\cf0\par
+\cf1\b import\cf2\b0  java.util.List;\cf0\par
+\par
+\cf1\b import\cf2\b0  org.springframework.beans.factory.annotation.Autowired;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.stereotype.Service;\cf0\par
+\par
+\cf1\b import\cf2\b0  com.training.productapp.domain.Product;\cf0\par
+\cf1\b import\cf2\b0  com.training.productapp.repository.IProductRepository;\cf0\par
+\par
+\cf3 @Service\cf0\par
+\cf1\b public\cf2\b0  \cf1\b class\cf2\b0  ProductServiceImpl \cf1\b implements\cf2\b0  IProductService \{\cf0\par
+\par
+\cf3 @Autowired\cf2\tab\cf0\par
+\cf1\b private\cf2\b0  IProductRepository \cf4 repository\cf2 ;\tab\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\cf3 @Override\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  Product addProduct(Product \cf5 product\cf2 ) \{\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 repository\cf2 .save(\cf5 product\cf2 );\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf3 @Override\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  Product updateProduct(Product \cf5 product\cf2 ) \{\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 repository\cf2 .save(\cf5 product\cf2 );\cf0\par
+\cf2\tab  \}\cf0\par
+\par
+\cf2\tab\cf3 @Override\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  Product updateProductPrice(Integer \cf5 productId\cf2 , Double \cf5 productPrice\cf2 ) \{\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\tab Product \cf5 product\cf2 =\cf4 repository\cf2 .findById(\cf5 productId\cf2 ).get();\cf0\par
+\cf2\tab\tab\cf0\par
+\cf2\tab\tab\cf5 product\cf2 .setPrice(\cf5 productPrice\cf2 );\cf0\par
+\cf2\tab\tab\tab\tab\tab\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 repository\cf2 .save(\cf5 product\cf2 );\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf3 @Override\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  Product findProductById(Integer \cf5 productId\cf2 ) \{\cf0\par
+\cf2\tab\tab\cf7 // \cf8\b TODO\cf7\b0  Auto-generated method stub\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 repository\cf2 .findById(\cf5 productId\cf2 ).get();\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf3 @Override\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  List<Product> findAllProducts() \{\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 repository\cf2 .findAll();\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf3 @Override\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b void\cf2\b0  deleteProduct(Integer \cf5 productId\cf2 ) \{\cf0\par
+\cf2\tab\tab\cf4 repository\cf2 .deleteById(\cf5 productId\cf2 );\cf0\par
+\cf2\tab\}\cf0\par
+\cf2\}\cf0\par
+\f0\fs22 ==============================================\par
+\cf9\f1\fs20 <?\cf10 xml\cf11  version\cf9 =\cf11 "\cf9 1.0\cf11 " encoding\cf9 =\cf11 "\cf9 UTF-8\cf11 "\cf9 ?>\cf0\par
+\cf2 <\cf10 project\cf2  \cf11 xmlns\cf2 =\cf11 "{\cf0{\field{\*\fldinst{HYPERLINK http://maven.apache.org/POM/4.0.0 }}{\fldrslt{http://maven.apache.org/POM/4.0.0\ul0\cf0}}}}\f1\fs20 "\cf2  \cf11 xmlns:xsi\cf2 =\cf11 "\cf13 http://www.w3.org/2001/XMLSchema-instance\cf11 "\cf0\par
+\cf2\tab\cf11 xsi:schemaLocation\cf2 =\cf11 "\cf13 http://maven.apache.org/POM/4.0.0 {\cf0{\field{\*\fldinst{HYPERLINK https://maven.apache.org/xsd/maven-4.0.0.xsd }}{\fldrslt{https://maven.apache.org/xsd/maven-4.0.0.xsd\ul0\cf0}}}}\cf11\f1\fs20 "\cf2 >\cf0\par
+\cf2\tab <\cf10 modelVersion\cf2 >4.0.0</\cf10 modelVersion\cf2 >\cf0\par
+\cf2\tab <\cf10 parent\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 groupId\cf2 >org.springframework.boot</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 artifactId\cf2 >spring-boot-starter-parent</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 version\cf2 >3.4.2</\cf10 version\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 relativePath\cf2 /> \cf11 <!-- lookup parent from repository -->\cf0\par
+\cf2\tab </\cf10 parent\cf2 >\cf0\par
+\cf2\tab <\cf10 groupId\cf2 >com.training</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab <\cf10 artifactId\cf2 >productapp</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab <\cf10 version\cf2 >0.0.1-SNAPSHOT</\cf10 version\cf2 >\cf0\par
+\cf2\tab <\cf10 name\cf2 >productapp</\cf10 name\cf2 >\cf0\par
+\cf2\tab <\cf10 description\cf2 >Demo project for Spring Boot</\cf10 description\cf2 >\cf0\par
+\cf2\tab <\cf10 url\cf2 />\cf0\par
+\cf2\tab <\cf10 licenses\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 license\cf2 />\cf0\par
+\cf2\tab </\cf10 licenses\cf2 >\cf0\par
+\cf2\tab <\cf10 developers\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 developer\cf2 />\cf0\par
+\cf2\tab </\cf10 developers\cf2 >\cf0\par
+\cf2\tab <\cf10 scm\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 connection\cf2 />\cf0\par
+\cf2\tab\tab <\cf10 developerConnection\cf2 />\cf0\par
+\cf2\tab\tab <\cf10 tag\cf2 />\cf0\par
+\cf2\tab\tab <\cf10 url\cf2 />\cf0\par
+\cf2\tab </\cf10 scm\cf2 >\cf0\par
+\cf2\tab <\cf10 properties\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 java.version\cf2 >17</\cf10 java.version\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 spring-cloud.version\cf2 >2024.0.0</\cf10 spring-cloud.version\cf2 >\cf0\par
+\cf2\tab </\cf10 properties\cf2 >\cf0\par
+\cf2\tab <\cf10 dependencies\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.boot</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 artifactId\cf2 >spring-boot-starter-data-jpa</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2     <\cf10 groupId\cf2 >com.mysql</\cf10 groupId\cf2 >\cf0\par
+\cf2     <\cf10 artifactId\cf2 >mysql-connector-j</\cf10 artifactId\cf2 >\cf0\par
+\cf2   \cf11 <!--  <version>8.0.23</version> -->\cf2  \cf11 <!-- Check for the latest version -->\cf0\par
+\cf2 </\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.boot</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 artifactId\cf2 >spring-boot-starter-web</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.cloud</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 artifactId\cf2 >spring-cloud-starter-config</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 groupId\cf2 >com.h2database</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 artifactId\cf2 >h2</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 scope\cf2 >runtime</\cf10 scope\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2     <\cf10 groupId\cf2 >org.springframework.boot</\cf10 groupId\cf2 >\cf0\par
+\cf2     <\cf10 artifactId\cf2 >spring-boot-starter-actuator</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab </\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.boot</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 artifactId\cf2 >spring-boot-starter-test</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 scope\cf2 >test</\cf10 scope\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependency\cf2 >\cf0\par
+\cf2\tab </\cf10 dependencies\cf2 >\cf0\par
+\cf2 <\cf10 dependencyManagement\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 dependencies\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.cloud</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab\tab <\cf10 artifactId\cf2 >spring-cloud-dependencies</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab\tab\tab <\cf10 version\cf2 >$\{spring-cloud.version\}</\cf10 version\cf2 >\cf0\par
+\cf2\tab\tab\tab\tab <\cf10 type\cf2 >pom</\cf10 type\cf2 >\cf0\par
+\cf2\tab\tab\tab\tab <\cf10 scope\cf2 >import</\cf10 scope\cf2 >\cf0\par
+\cf2\tab\tab\tab </\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependencies\cf2 >\cf0\par
+\cf2\tab </\cf10 dependencyManagement\cf2 >\cf0\par
+\cf2\tab <\cf10 build\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 plugins\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 plugin\cf2 >\cf0\par
+\cf2\tab\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.boot</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab\tab <\cf10 artifactId\cf2 >spring-boot-maven-plugin</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab\tab </\cf10 plugin\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 plugins\cf2 >\cf0\par
+\cf2\tab </\cf10 build\cf2 >\cf0\par
+\par
+\cf2 </\cf10 project\cf2 >\par
+\f2\lang1033 ===================================\par
+application.properties\par
+\f1 spring.h2.console.path=\cf13 /h2-console\cf0\par
+\cf2 spring.h2.console.settings.trace=\cf13 false\cf0\par
+\cf2 spring.h2.console.settings.web-allow-others=\cf13 false\cf0\par
+\cf11 #Accessing the H2 Console\cf0\par
+\cf2 spring.h2.console.enabled=\cf13 true\cf0\par
+\par
+\cf2  spring.datasource.url=\cf13 jdbc:h2:mem:trainingdb\cf0\par
+\cf2 spring.datasource.driver-class-name=\cf13 org.h2.Driver\cf0\par
+\cf2 spring.datasource.username=\cf13 sa\cf0\par
+\cf2 spring.datasource.password=\cf13 password\cf0\f2\lang9\par
+\f0\fs22 #############################################################\par
+DEMO 2:\par
+application.properties\par
+\cf2\f1\fs20 spring.application.name=\cf13 productapp\cf0\par
+\cf2 management.endpoints.web.exposure.include=\cf13 *\cf0\par
+\cf2 spring.profiles.active=\cf13 dev\par
+\cf2 spring.profiles.active=\cf13\f2\lang1033 prod\par
+---------------------------------------\par
+application-dev.properties\par
+\cf2\f1 spring.h2.console.path=\cf13 /h2-console\cf0\par
+\cf2 spring.h2.console.settings.trace=\cf13 false\cf0\par
+\cf2 spring.h2.console.settings.web-allow-others=\cf13 false\cf0\par
+\cf11 #Accessing the H2 Console\cf0\par
+\cf2 spring.h2.console.enabled=\cf13 true\cf0\par
+\cf2 spring.datasource.url=\cf13 jdbc:h2:mem:trainingdb\cf0\par
+\cf2 spring.datasource.driver-class-name=\cf13 org.h2.Driver\cf0\par
+\cf2 spring.datasource.username=\cf13 sa\cf0\par
+\cf2 spring.datasource.password=\cf13 password\cf0\par
+\par
+\cf2 spring.jpa.properties.hibernate.show.sql=\cf13 true\cf0\par
+\cf2 spring.jpa.properties.hibernate.format.sql=\cf13 true\f2\par
+\par
+---------------------------------------\par
+application-prod.properties\par
+\cf0\f1\par
+\cf7 # MySQL Configuration\cf0\par
+\cf2 spring.datasource.url=\cf6\ul jdbc\ulnone :\ul mysql\ulnone ://\ul localhost\ulnone :3306/TrgMysqlDb?useSSL=false&serverTimezone=UTC\cf0\par
+\cf2 spring.datasource.username=\cf6 root\cf0\par
+\cf2 spring.datasource.password=\cf6 MySQL1234$\cf0\par
+\cf2 spring.datasource.driver-class-name=\cf6 com.mysql.cj.jdbc.Driver\cf0\par
+\cf7 #spring.jpa.database-platform=org.hibernate.dialect.MySQL5InnoDBDialect\cf0\par
+\cf2 spring.jpa.hibernate.ddl-auto=\cf6 update\cf0\par
+\cf2 spring.jpa.show-sql=\cf6 true\cf0\par
+\par
+\cf2 spring.jpa.properties.hibernate.show.sql=\cf6 true\cf0\par
+\cf2 spring.jpa.properties.hibernate.format.sql=\cf6 true\cf0\par
+\f2 -------------------------------------\par
+Based on application.properties, dev or prod file is executed\par
+1. right click the project -> run as -> run configuration -> VM Argument\par
+2. -Dspring.profiles.active=dev\par
+or\par
+3. Choose Spring boot tab -> select the profile\par
+or\par
+4. From Boot Dashboard -> right click the project -> open configuration\par
+\par
+#########################################3\f1\par
+\cf13\f2 Demo 3:\par
+Spring cloud - Config Server\par
+1. Create a new project - Spring starter project\par
+2. Select Config Server dependency\par
+3. \cf3\highlight14\f1 @EnableConfigServer\f2  to the main class\cf13\highlight0\par
+\cf0\f0\fs22\lang9 4. application.properties\par
+\cf2\f1\fs20 spring.application.name=\cf13 product-configserver\cf0\par
+\cf2 server.port=\cf13 8888\cf0\par
+\cf2 spring.cloud.config.server.git.uri=\cf13 https://github.com/VimalaR1528/TNSpringMicro\cf0\f0\fs22\par
+----------------------------\par
+Productapp application\par
+1. Add the following in the POM.xml file\par
+\cf2\f1\fs20 <\cf10 properties\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 java.version\cf2 >17</\cf10 java.version\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 spring-cloud.version\cf2 >2024.0.0</\cf10 spring-cloud.version\cf2 >\cf0\par
+\cf2\tab </\cf10 properties\cf2 >\par
+\par
+<\cf10 dependencyManagement\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 dependencies\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.cloud</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab\tab <\cf10 artifactId\cf2 >spring-cloud-dependencies</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab\tab\tab <\cf10 version\cf2 >$\{spring-cloud.version\}</\cf10 version\cf2 >\cf0\par
+\cf2\tab\tab\tab\tab <\cf10 type\cf2 >pom</\cf10 type\cf2 >\cf0\par
+\cf2\tab\tab\tab\tab <\cf10 scope\cf2 >import</\cf10 scope\cf2 >\cf0\par
+\cf2\tab\tab\tab </\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependencies\cf2 >\cf0\par
+\cf2\tab </\cf10 dependencyManagement\cf2 >\par
+\par
+<\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.cloud</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 artifactId\cf2 >spring-cloud-starter-config</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependency\cf2 >\par
+\f2\lang1033 2. application.properties\par
+\cf15\f1 Config Server and Config Client\par
+spring.config.import=optional:configserver:http://localhost:8888\par
+spring.cloud.config.label=main\par
+spring.application.name=application\f0\fs22\lang9\par
+\cf0 -----------------------------\par
+GIT hub Repository\par
+Login in into the github repository\par
+{{\field{\*\fldinst{HYPERLINK https://github.com/VimalaR1528/TNSpringMicro }}{\fldrslt{https://github.com/VimalaR1528/TNSpringMicro\ul0\cf0}}}}\f0\fs22\par
+application-dev.properties\par
+spring.h2.console.path=/h2-console\par
+spring.h2.console.settings.trace=false\par
+spring.h2.console.settings.web-allow-others=false\par
+#Accessing the H2 Console\par
+spring.h2.console.enabled=true\par
+spring.datasource.url=jdbc:h2:mem:trainingdb\par
+spring.datasource.driver-class-name=org.h2.Driver\par
+spring.datasource.username=sa\par
+spring.datasource.password=password\par
+\par
+spring.jpa.properties.hibernate.show.sql=true\par
+spring.jpa.properties.hibernate.format.sql=true\par
+\par
+application-prod.properties\par
+\par
+# MySQL Configuration\par
+spring.datasource.url=jdbc:mysql://localhost:3306/TrgMysqlDb?useSSL=false&serverTimezone=UTC\par
+spring.datasource.username=root\par
+spring.datasource.password=MySQL1234$\par
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver\par
+#spring.jpa.database-platform=org.hibernate.dialect.MySQL5InnoDBDialect\par
+spring.jpa.hibernate.ddl-auto=update\par
+spring.jpa.show-sql=true\par
+\par
+spring.jpa.properties.hibernate.show.sql=true\par
+spring.jpa.properties.hibernate.format.sql=true\par
+\par
+##################################################################3\par
+DEMO 4:\par
+\par
+Change the file names in github repository as\par
+application-dev.properties\par
+application-prod.properties\par
+to\par
+product-service-dev.properties\par
+product-service-prod.properties\par
+\par
+{{\field{\*\fldinst{HYPERLINK http://localhost:8888/product-service/dev/main }}{\fldrslt{http://localhost:8888/product-service/dev/main\ul0\cf0}}}}\f0\fs22\par
+{{\field{\*\fldinst{HYPERLINK http://localhost:8888/product-service/prod/main }}{\fldrslt{http://localhost:8888/product-service/prod/main\ul0\cf0}}}}\f0\fs22\par
+\par
+Productapp - application.properties\par
+\cf2\f1\fs20 server.port=\cf13 8080\cf0\par
+\par
+\cf2 management.endpoints.web.exposure.include=\cf13 *\cf0\par
+\par
+\cf2 spring.config.import=\cf13 optional:configserver:http://localhost:8888\cf0\par
+\par
+\cf2 spring.cloud.config.label=\cf13 main\cf0\par
+\par
+\cf11 #spring.application.name=application\cf0\par
+\cf2 spring.application.name=\cf13 product-service\cf0\par
+\par
+\cf11 #Environment - show value\cf0\par
+\cf2 management.endpoint.env.show-values=\cf13 always\cf0\par
+\f0\fs22 ..........................................\par
+\par
+################################################\par
+Demo 5:\par
+\par
+\ul Hikari:\ulnone\par
+The default maximumPoolSize is 10.\par
+The HikariCP pool size determines how many database connections can be maintained simultaneously, impacting performance and resource utilization.\par
+\ul High Performance \ulnone\par
+HikariCP is the fastest JDBC connection pool, outperforming other pools like C3P0 and Apache DBCP.\par
+It minimizes latency by efficiently managing database connections.\par
+\ul Reduced Connection Overhead \par
+\ulnone Creating new database connections is expensive.\par
+HikariCP reuses connections, reducing the time spent on opening and closing connections.\par
+\par
+When the properties file is changed,\par
+spring.datasource.hikari.maximum-pool-size=80\par
+\par
+on config server\par
+{{\field{\*\fldinst{HYPERLINK http://localhost:8888/product-service/prod/main }}{\fldrslt{http://localhost:8888/product-service/prod/main\ul0\cf0}}}}\f0\fs22\par
+ this displaces value as  80\par
+\par
+but in application,\par
+{{\field{\*\fldinst{HYPERLINK http://localhost:8080/actuator/env }}{\fldrslt{http://localhost:8080/actuator/env\ul0\cf0}}}}\f0\fs22\par
+value is 30  which is old only\par
+\par
+Solution:\par
+Now when u restart the application - productapp, then environment variable will get updated\par
+\par
+but  we should not restart the application for small changes.\par
+##################################################3\par
+\par
+Demo 6:\par
+When we add cloud config then we get new property added which is bus refresh\par
+{{\field{\*\fldinst{HYPERLINK http://localhost:8080/actuator/refresh }}{\fldrslt{http://localhost:8080/actuator/refresh\ul0\cf0}}}}\f0\fs22\par
+\par
+ - we can get the changes updated without restarting the application\par
+- Run the below url in the postman\par
+POST - {{\field{\*\fldinst{HYPERLINK http://localhost:8080/actuator/refresh }}{\fldrslt{http://localhost:8080/actuator/refresh\ul0\cf0}}}}\f0\fs22\par
+- the values are updated in the environment varaible\par
+To check for changes\par
+{{\field{\*\fldinst{HYPERLINK http://localhost:8080/actuator/env }}{\fldrslt{http://localhost:8080/actuator/env\ul0\cf0}}}}\f0\fs22\par
+#############################################\par
+Demo 7:\par
+Custom configuration\par
+Add a new property in github properties file\par
+In Prod.properties, add the following\par
+application.theme.color=pink\par
+\par
+Create a new class\par
+\cf1\b\f1\fs20 package\cf2\b0  com.training.productapp;\cf0\par
+\cf2  \cf0\par
+\cf1\b import\cf2\b0  org.springframework.beans.factory.annotation.Value;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.cloud.context.config.annotation.RefreshScope;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.stereotype.Component;\cf0\par
+\par
+\cf3 @RefreshScope\cf0\par
+\cf3 @Component\cf0\par
+\cf1\b public\cf2\b0  \cf1\b class\cf2\b0  ValueRefreshConfigBean \{\cf0\par
+\par
+\cf2\tab\cf1\b private\cf2\b0  String \cf4 color\cf2 ;\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  ValueRefreshConfigBean(\cf3 @Value\cf2 (\cf6 "$\{\highlight16 application.theme.color\highlight0\}"\cf2 )String \cf5 color\cf2 ) \{\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf4 color\cf2 =\cf5 color\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  String getColor() \{\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 color\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\cf2\}\cf0\par
+\f0\fs22 Now check the \par
+{{\field{\*\fldinst{HYPERLINK http://localhost:8888/product-service/prod/main }}{\fldrslt{http://localhost:8888/product-service/prod/main\ul0\cf0}}}}\f0\fs22    - It will display\par
+but when we  check the env var of application Productapp\par
+{{\field{\*\fldinst{HYPERLINK http://localhost:8080/actuator/env }}{\fldrslt{http://localhost:8080/actuator/env\ul0\cf0}}}}\f0\fs22   - it will not display\par
+Now use Refresh\par
+{{\field{\*\fldinst{HYPERLINK http://localhost:8080/actuator/refresh }}{\fldrslt{http://localhost:8080/actuator/refresh\ul0\cf0}}}}\f0\fs22\par
+then it will get updated without restarting  the application\par
+##########################################\par
+Demo 8:\par
+\par
+When multiple microservices are running then we cannt refresh for all one by one.\par
+\par
+When we make\par
+server.port=0\par
+then every time we run the application it will take the random port\par
+port: 50735\par
+{{\field{\*\fldinst{HYPERLINK http://localhost:50735/products }}{\fldrslt{http://localhost:50735/products\ul0\cf0}}}}\f0\fs22\par
+port:50929\par
+{{\field{\*\fldinst{HYPERLINK http://localhost:50929/products }}{\fldrslt{http://localhost:50929/products\ul0\cf0}}}}\f0\fs22\par
+Like this we can right click the storeapp and start it multiple time\par
+each will have its own envirnment\par
+\par
+Now if I change the pool size or theme color properties\par
+and now if I need to get the updated value we need to do actuator/refresh for each instance that we have started\par
+This is the drawback\par
+{{\field{\*\fldinst{HYPERLINK http://localhost:50735/actuator/refresh }}{\fldrslt{http://localhost:50735/actuator/refresh\ul0\cf0}}}}\f0\fs22\par
+{{\field{\*\fldinst{HYPERLINK http://localhost:50929/actuator/refresh }}{\fldrslt{http://localhost:50929/actuator/refresh\ul0\cf0}}}}\f0\fs22\par
+#########################################################\par
+\par
+Demo 9:\par
+1. Start the Docker container\par
+2. {{\field{\*\fldinst{HYPERLINK https://www.rabbitmq.com/docs/download }}{\fldrslt{https://www.rabbitmq.com/docs/download\ul0\cf0}}}}\f0\fs22\par
+# latest RabbitMQ 4.0.x\par
+docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:4.0-management\par
+Run the above command in the command prompt\par
+Rabbitmq will start with the port 5672\par
+Rabbitmq dashboard will start in the port 15672\par
+{{\field{\*\fldinst{HYPERLINK http://localhost:15672 }}{\fldrslt{http://localhost:15672\ul0\cf0}}}}\f0\fs22\par
+UN:guest\par
+pswd: guest\par
+3. In Product Config Server,\par
+add the following dependency,\par
+<!-- {{\field{\*\fldinst{HYPERLINK https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-amqp }}{\fldrslt{https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-amqp\ul0\cf0}}}}\f0\fs22  -->\par
+<dependency>\par
+    <groupId>org.springframework.cloud</groupId>\par
+    <artifactId>spring-cloud-starter-bus-amqp</artifactId>\par
+    </dependency>\par
+\cf2\f1\fs20 <\cf10 dependency\cf2 >\cf0\par
+\cf2     <\cf10 groupId\cf2 >org.springframework.boot</\cf10 groupId\cf2 >\cf0\par
+\cf2     <\cf10 artifactId\cf2 >spring-boot-starter-actuator</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab </\cf10 dependency\cf2 >\cf0\f0\fs22\par
+4. Add the following in application.properties file in Config server,\par
+\cf2\highlight14\f1\fs20 management.endpoints.web.exposure.include=\cf13 busrefresh\par
+\par
+\cf2\highlight0 spring.rabbitmq.host=\cf13 localhost\cf0\par
+\cf2 spring.rabbitmq.port=\cf13 5672\cf0\par
+\cf2 spring.rabbitmq.username=\cf13 guest\cf0\par
+\cf2 spring.rabbitmq.password=\cf13 guest\cf0\f0\fs22\par
+5. In Productapp application add the following,\par
+Pom.xml\par
+\cf2\f1\fs20 <\cf10 dependency\cf2 >\cf0\par
+\cf2     <\cf10 groupId\cf2 >org.springframework.cloud</\cf10 groupId\cf2 >\cf0\par
+\cf2     <\cf10 artifactId\cf2 >spring-cloud-starter-bus-amqp</\cf10 artifactId\cf2 >\cf0\par
+\cf2     \cf11 <!--<version>4.1.3</version>-->\cf0\par
+\cf2\tab </\cf10 dependency\cf2 >\par
+\f2\lang1033 application.properties\par
+\cf11\f1 #Environment - show value\cf0\par
+\cf2 management.endpoint.env.show-values=\cf13 always\cf0\par
+\par
+\cf2 spring.rabbitmq.host=\cf13 localhost\cf0\par
+\cf2 spring.rabbitmq.port=\cf13 5672\cf0\par
+\cf2 spring.rabbitmq.username=\cf13 guest\cf0\par
+\cf2 spring.rabbitmq.password=\cf13 guest\cf0\f0\fs22\lang9\par
+\par
+1. Start the Rabbitmq\par
+2. Start config server\par
+3. Start product app application\par
+\par
+1. Observe the changes every time we start the different applications in rabbitmq\par
+2. start multiple instance of Productapp application\par
+3. make changes in the github application.properties file and observe the changes in the following,\par
+{{\field{\*\fldinst{HYPERLINK http://localhost:8888/product-service/prod/main }}{\fldrslt{http://localhost:8888/product-service/prod/main\ul0\cf0}}}}\f0\fs22\par
+{{\field{\*\fldinst{HYPERLINK http://localhost:52497/actuator/env }}{\fldrslt{http://localhost:52497/actuator/env\ul0\cf0}}}}\f0\fs22\par
+{{\field{\*\fldinst{HYPERLINK http://localhost:52173/actuator/env }}{\fldrslt{http://localhost:52173/actuator/env\ul0\cf0}}}}\f0\fs22\par
+To refresh the property for all application\par
+POST: {{\field{\*\fldinst{HYPERLINK http://localhost:8888/actuator/busrefresh }}{\fldrslt{http://localhost:8888/actuator/busrefresh\ul0\cf0}}}}\f0\fs22\par
+When config server (8888) is refreshed then all the app is enabled with upated value\par
+\par
+###########################################\par
+\par
+Demo 10:\par
+Dynamic Port \par
+- Changing Port\par
+\par
+Dynamic IP Address\par
+- Cloud - AutoScaling\par
+\par
+service to service call - failed\par
+--------------------------------------------------------\par
+{{\field{\*\fldinst{HYPERLINK https://microservices.io/patterns/service-registry.html }}{\fldrslt{https://microservices.io/patterns/service-registry.html\ul0\cf0}}}}\f0\fs22\par
+{{\field{\*\fldinst{HYPERLINK https://microservices.io/patterns/self-registration.html }}{\fldrslt{https://microservices.io/patterns/self-registration.html\ul0\cf0}}}}\f0\fs22\par
+--------------------------------------------------------\par
+Setting up the Eureka Server:\par
+\par
+1) Create a Spring Boot Project: (cloudserver-eureka)\par
+- Starter - Eureka Server\par
+\par
+<dependency>\par
+<groupId>org.springframework.cloud</groupId>\par
+<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>\par
+</dependency>\par
+\par
+2) In application.properties:\par
+\par
+server.port=8761\par
+eureka.client.register-with-eureka=false\par
+eureka.client.fetch-registry=false\par
+\par
+3) Add @EnableEurekaServer on the Application class\par
+\par
+4) Stater the server & access\par
+\par
+{{\field{\*\fldinst{HYPERLINK http://localhost:8761/ }}{\fldrslt{http://localhost:8761/\ul0\cf0}}}}\f0\fs22\par
+\par
+\cf1\b\f1\fs20 package\cf2\b0  com.training.product_es;\cf0\par
+\par
+\cf1\b import\cf2\b0  org.springframework.boot.SpringApplication;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.boot.autoconfigure.SpringBootApplication;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;\cf0\par
+\par
+\cf3 @EnableEurekaServer\cf0\par
+\cf3 @SpringBootApplication\cf0\par
+\cf1\b public\cf2\b0  \cf1\b class\cf2\b0  ProductEsApplication \{\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b static\cf2\b0  \cf1\b void\cf2\b0  main(String[] \cf5 args\cf2 ) \{\cf0\par
+\cf2\tab\tab SpringApplication.\i run\i0 (ProductEsApplication.\cf1\b class\cf2\b0 , \cf5 args\cf2 );\cf0\par
+\cf2\tab\}\cf0\par
+\cf2\}\cf0\par
+\f0\fs22 =======================\par
+application.properties\par
+\cf2\f1\fs20 spring.application.name=\cf13 product-es\cf0\par
+\par
+\cf2 server.port=\cf13 8761\cf0\par
+\cf2 eureka.client.register-with-eureka=\cf13 false\cf0\par
+\cf2 eureka.client.fetch-registry=\cf13 false\par
+\f2\lang1033 ==========================\par
+\cf2\f1 <\cf10 dependencies\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.cloud</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 artifactId\cf2 >spring-cloud-starter-netflix-eureka-server</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependency\cf2 >\cf0\par
+\par
+\cf2\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.boot</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 artifactId\cf2 >spring-boot-starter-test</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 scope\cf2 >test</\cf10 scope\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependency\cf2 >\cf0\par
+\cf2\tab </\cf10 dependencies\cf2 >\par
+\cf13\f2\par
+\cf0\f0\fs22\lang9\par
+---------------------------------------------------------\par
+\par
+Dynamic Registration:\par
+\par
+Service Provider: (Service Instance/Eureka Client) - storeapp\par
+\par
+1) In pom.xml (Starter - Eureka Discovery Client)\par
+\par
+<dependency>\par
+<groupId>org.springframework.cloud</groupId>\par
+<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>\par
+</dependency>\par
+\par
+2) In application.properties:\par
+\par
+eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka\par
+eureka.instance.preferIpAddress=true\par
+\par
+3) Add @EnableEurekaClient to the Application class\par
+\par
+4) Start the Config Server\par
+   Start the Eureka Server\par
+   Start the storeapp\par
+\par
+---------------------------------------------------------\par
+\par
+spring.application.name\par
+\par
+Two responsibilities:\par
+1) Spring Cloud Config - Property file name\par
+2) Spring Cloud Eureka - Instance (Service Provider) is registered with this name (serviceId)\par
+\par
+---------------------------------------------------------\par
+\par
+Service Consumer: (Dynamic Discovery)\par
+\par
+{{\field{\*\fldinst{HYPERLINK http://product-service/products }}{\fldrslt{http://product-service/products\ul0\cf0}}}}\f0\fs22\tab\tab GET\par
+{{\field{\*\fldinst{HYPERLINK http://product-service/products/1 }}{\fldrslt{http://product-service/products/1\ul0\cf0}}}}\f0\fs22\tab GET\par
+\par
+---------------------------------------------------------\par
+\par
+{{\field{\*\fldinst{HYPERLINK https://microservices.io/patterns/client-side-discovery.html }}{\fldrslt{https://microservices.io/patterns/client-side-discovery.html\ul0\cf0}}}}\f0\fs22\par
+\par
+Client Side Load Balancing: (Ribbon)\par
+\par
+Client Side Discovery: (implementation Netflix Ribbon)\par
+- Registry aware HTTP Client\par
+- Round Robbin Algorithm\par
+- Caching\par
+\par
+Service to Service:\par
+- RestTemplate (HTTP Client) \par
+\par
+- get\par
+- post\par
+- put\par
+- delete \par
+- patch\par
+- exchange\par
+\par
+Spring Cloud Ribbon:\par
+- @LoadBalanced\par
+\par
+---------------------------------------------------------\par
+\par
+url\par
+\par
+---------------------------------------------------------\par
+\par
+RestTemplate rt = new RestTemplate();\par
+rt.get..("http://product-service/products");\par
+\par
+---------------------------------------------------------\par
+\par
+************************** Client Side Load Balancing with Ribbon:\par
+(serviceconsumer-eureka-ribbon)\par
+\par
+1) Create a Spring Boot Project: (serviceconsumer-eureka-ribbon)\par
+- Starter - Eureka Discovery Client(/Ribbon), Web, Actuator\par
+\par
+2) In application.properties:\par
+\par
+server.port=9997\par
+eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka\par
+eureka.client.register-with-eureka=false\par
+\par
+3) Consumer:\par
+{{\field{\*\fldinst{HYPERLINK http://product-service/products/1 }}{\fldrslt{http://product-service/products/1\ul0\cf0}}}}\f0\fs22\tab GET\par
+\par
+4) Create a Controller\par
+\par
+5) Create a RegistryAwareConfig \par
+- RestTemplate - @LoadBalanced - Config class\par
+\par
+6) Test:\par
+{{\field{\*\fldinst{HYPERLINK http://localhost:9997/get-products/1 }}{\fldrslt{http://localhost:9997/get-products/1\ul0\cf0}}}}\f0\fs22\par
+\cf1\b\f1\fs20 package\cf2\b0  com.training.ribbon;\cf0\par
+\par
+\cf1\b import\cf2\b0  org.springframework.cloud.client.loadbalancer.LoadBalanced;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.context.annotation.Bean;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.context.annotation.Configuration;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.web.client.RestTemplate;\cf0\par
+\par
+\cf3 @Configuration\cf0\par
+\cf1\b public\cf2\b0  \cf1\b class\cf2\b0  Config \{\cf0\par
+\cf2\tab\tab\cf0\par
+\cf2\tab\tab\cf3 @LoadBalanced\cf0\par
+\cf2\tab\tab\cf3 @Bean\cf0\par
+\cf2\tab\tab\cf1\b public\cf2\b0  \highlight17 RestTemplate\highlight0  getRestTemplate() \{\cf0\par
+\cf2\tab\tab\tab\cf1\highlight17\b return\cf2\b0  \cf1\b new\cf2\b0  RestTemplate();\cf0\highlight0\par
+\cf2\tab\tab\}\cf0\par
+\cf2\}\par
+\f2\lang1033 ===========================\par
+\cf1\b\f1 package\cf2\b0  com.training.ribbon;\cf0\par
+\par
+\cf1\b import\cf2\b0  org.springframework.boot.SpringApplication;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.boot.autoconfigure.SpringBootApplication;\cf0\par
+\par
+\cf3 @SpringBootApplication\cf0\par
+\cf1\b public\cf2\b0  \cf1\b class\cf2\b0  ProductRibbonApplication \{\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b static\cf2\b0  \cf1\b void\cf2\b0  main(String[] \cf5 args\cf2 ) \{\cf0\par
+\cf2\tab\tab SpringApplication.\i run\i0 (ProductRibbonApplication.\cf1\b class\cf2\b0 , \cf5 args\cf2 );\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\}\cf0\par
+\f2 ===============================\par
+\cf1\b\f1 package\cf2\b0  com.training.ribbon.controller;\cf0\par
+\par
+\cf1\b import\cf2\b0  org.springframework.beans.factory.annotation.Autowired;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.context.annotation.Scope;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.web.bind.annotation.GetMapping;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.web.bind.annotation.PathVariable;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.web.bind.annotation.RestController;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.web.client.RestTemplate;\cf0\par
+\par
+\cf1\b import\cf2\b0  com.training.ribbon.domain.Product;\cf0\par
+\par
+\cf3 @RestController\cf0\par
+\cf3 @Scope\cf2 (\cf6 "request"\cf2 )\cf0\par
+\cf1\b public\cf2\b0  \cf1\b class\cf2\b0  ProductClientController \{\cf0\par
+\par
+\cf2\tab\cf3 @Autowired\cf0\par
+\cf2\tab\cf1\b private\cf2\b0  RestTemplate \cf4 restTemplate\cf2 ;\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\cf3 @GetMapping\cf2 (\cf6 "/get-products/\{id\}"\cf2 )\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  \highlight17 Product\highlight0  getProductById(\cf3 @PathVariable\cf2 (\cf6 "id"\cf2 )Integer \cf5 id\cf2 ) \{\cf0\par
+\cf2\tab\tab Product \cf5 product\cf2 =\cf4 restTemplate\cf2 .\highlight17 getForObject\highlight0 (\cf6 "http://product-service/products/"\cf2 +\cf5 id\cf2 , Product.\cf1\b class\cf2\b0 );\cf0\par
+\cf2\tab\tab\cf0\par
+\cf2\tab\tab\cf1\highlight17\b return\cf2\b0  \cf5 product\cf2 ;\cf0\highlight0\par
+\cf2\tab\}\cf0\par
+\cf2\}\cf0\par
+\f2 =====================\par
+\cf1\b\f1 package\cf2\b0  com.training.ribbon.domain;\cf0\par
+\cf2  \cf0\par
+\cf2  \cf0\par
+\cf7 //import lombok.AllArgsConstructor;\cf0\par
+\cf7 //import lombok.Data;\cf0\par
+\cf7 //import lombok.NoArgsConstructor;\cf0\par
+\par
+\cf7 //@Data\cf0\par
+\cf7 //@NoArgsConstructor\cf0\par
+\cf7 //@AllArgsConstructor\cf0\par
+\cf1\b public\cf2\b0  \cf1\b class\cf2\b0  Product \{\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\cf1\b private\cf2\b0  Integer \cf4 id\cf2 ;\cf0\par
+\cf2\tab\cf1\b private\cf2\b0  String \cf4 name\cf2 ;\cf0\par
+\cf2\tab\cf1\b private\cf2\b0  Double \cf4 price\cf2 ;\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  Product() \{\cf0\par
+\cf2\tab\tab\cf7 // \cf8\b TODO\cf7\b0  Auto-generated constructor stub\cf0\par
+\cf2\tab\}\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  Product(Integer \cf5 id\cf2 , String \cf5 name\cf2 , Double \cf5 price\cf2 ) \{\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf4 id\cf2  = \cf5 id\cf2 ;\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf4 name\cf2  = \cf5 name\cf2 ;\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf4 price\cf2  = \cf5 price\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\par
+\par
+\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  Integer getId() \{\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 id\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b void\cf2\b0  setId(Integer \cf5 id\cf2 ) \{\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf4 id\cf2  = \cf5 id\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  String getName() \{\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 name\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b void\cf2\b0  setName(String \cf5 name\cf2 ) \{\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf4 name\cf2  = \cf5 name\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  Double getPrice() \{\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 price\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b void\cf2\b0  setPrice(Double \cf5 price\cf2 ) \{\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf4 price\cf2  = \cf5 price\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf3 @Override\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  String toString() \{\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf6 "Product [id="\cf2  + \cf4 id\cf2  + \cf6 ", name="\cf2  + \cf4 name\cf2  + \cf6 ", price="\cf2  + \cf4 price\cf2  + \cf6 "]"\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\cf2\tab\cf0\par
+\par
+\cf2\}\cf0\par
+\f2 ===========================\par
+\cf2\f1 spring.application.name=\cf13 product-ribbon\cf0\par
+\par
+\cf2 server.port=\cf13 9997\cf0\par
+\cf2 eureka.client.serviceUrl.defaultZone=\cf13 http://localhost:8761/eureka\cf0\par
+\cf2 eureka.client.register-with-eureka=\cf13 false\cf0\par
+\f2 ==========================\par
+\cf2\f1 <\cf10 dependencies\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.boot</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 artifactId\cf2 >spring-boot-starter-actuator</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.boot</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 artifactId\cf2 >spring-boot-starter-web</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.cloud</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 artifactId\cf2 >spring-cloud-starter-netflix-eureka-client</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependency\cf2 >\cf0\par
+\par
+\cf2\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.boot</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 artifactId\cf2 >spring-boot-starter-test</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 scope\cf2 >test</\cf10 scope\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependency\cf2 >\cf0\par
+\cf2\tab </\cf10 dependencies\cf2 >\cf0\lang9\par
+\par
+\f0\fs22\par
+---------------------------------------------------------\par
+\par
+ *********************** Spring Cloud Routing - OpenFeign\par
+(serviceconsumer-eureka-feign)\par
+\par
+1) Create a Spring Boot Project: (serviceconsumer-eureka-feign)\par
+- Starter - Eureka Discovery Client/Ribbon, OpenFeign, Web, Actuator\par
+\par
+2) In application.properties:\par
+\par
+server.port=9996\par
+eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka\par
+eureka.client.register-with-eureka=false\par
+\par
+3) Create the ProductServiceProxy Interface\par
+\par
+@FeignClient("product-service")\par
+\par
+4) Autowired the Proxy in Controller/Service\par
+\par
+5) Add @EnableFeignClients in the Application class\par
+\par
+\cf1\b\f1\fs20 package\cf2\b0  com.training.feign;\cf0\par
+\par
+\cf1\b import\cf2\b0  org.springframework.boot.SpringApplication;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.boot.autoconfigure.SpringBootApplication;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.cloud.openfeign.EnableFeignClients;\cf0\par
+\par
+\cf3 @EnableFeignClients\cf0\par
+\cf3 @SpringBootApplication\cf0\par
+\cf1\b public\cf2\b0  \cf1\b class\cf2\b0  ProductFeignApplication \{\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b static\cf2\b0  \cf1\b void\cf2\b0  main(String[] \cf5 args\cf2 ) \{\cf0\par
+\cf2\tab\tab SpringApplication.\i run\i0 (ProductFeignApplication.\cf1\b class\cf2\b0 , \cf5 args\cf2 );\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\}\cf0\par
+\f0\fs22 ===========================\par
+\cf1\b\f1\fs20 package\cf2\b0  com.training.feign.controller;\cf0\par
+\cf2  \cf0\par
+\par
+\cf1\b import\cf2\b0  java.util.List;\cf0\par
+\par
+\cf1\b import\cf2\b0  org.springframework.beans.factory.annotation.Autowired;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.context.annotation.Scope;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.web.bind.annotation.GetMapping;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.web.bind.annotation.PathVariable;\cf0\par
+\cf1\b import\cf2\b0  org.springframework.web.bind.annotation.RestController;\cf0\par
+\par
+\cf1\b import\cf2\b0  com.training.feign.domain.Product;\cf0\par
+\cf1\b import\cf2\b0  com.training.feign.proxy.ProductProxy;\cf0\par
+\par
+\cf3 @RestController\cf0\par
+\cf3 @Scope\cf2 (\cf6 "request"\cf2 )\cf0\par
+\cf1\b public\cf2\b0  \cf1\b class\cf2\b0  ProductClientController \{\cf0\par
+\par
+\cf2\tab\cf3 @Autowired\cf0\par
+\cf2\tab\cf1\b private\cf2\b0  ProductProxy  \cf4 productServiceProxy\cf2 ;\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\cf3 @GetMapping\cf2 (\cf6 "/get-products/\{id\}"\cf2 )\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  Product getProductById(\cf3 @PathVariable\cf2 (\cf6 "id"\cf2 ) \cf1\b int\cf2\b0  \cf5 id\cf2 ) \{\cf0\par
+\cf2\tab\tab\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 productServiceProxy\cf2 .getProductById(\cf5 id\cf2 );\cf0\par
+\cf2\tab\}\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\cf3 @GetMapping\cf2 (\cf6 "/get-products"\cf2 )\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  List<Product> getProducts() \{\cf0\par
+\cf2\tab\tab\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 productServiceProxy\cf2 .getAllProducts();\cf0\par
+\cf2\tab\}\cf0\par
+\cf2\}\cf0\par
+\par
+\par
+\f0\fs22 ===============================\par
+\cf1\b\f1\fs20 package\cf2\b0  com.training.feign.domain;\cf0\par
+\cf2  \cf0\par
+\cf2  \cf0\par
+\cf7 //import lombok.AllArgsConstructor;\cf0\par
+\cf7 //import lombok.Data;\cf0\par
+\cf7 //import lombok.NoArgsConstructor;\cf0\par
+\par
+\cf7 //@Data\cf0\par
+\cf7 //@NoArgsConstructor\cf0\par
+\cf7 //@AllArgsConstructor\cf0\par
+\cf1\b public\cf2\b0  \cf1\b class\cf2\b0  Product \{\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\cf1\b private\cf2\b0  Integer \cf4 id\cf2 ;\cf0\par
+\cf2\tab\cf1\b private\cf2\b0  String \cf4 name\cf2 ;\cf0\par
+\cf2\tab\cf1\b private\cf2\b0  Double \cf4 price\cf2 ;\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  Product() \{\cf0\par
+\cf2\tab\tab\cf7 // \cf8\b TODO\cf7\b0  Auto-generated constructor stub\cf0\par
+\cf2\tab\}\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  Product(Integer \cf5 id\cf2 , String \cf5 name\cf2 , Double \cf5 price\cf2 ) \{\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf4 id\cf2  = \cf5 id\cf2 ;\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf4 name\cf2  = \cf5 name\cf2 ;\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf4 price\cf2  = \cf5 price\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\par
+\par
+\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  Integer getId() \{\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 id\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b void\cf2\b0  setId(Integer \cf5 id\cf2 ) \{\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf4 id\cf2  = \cf5 id\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  String getName() \{\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 name\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b void\cf2\b0  setName(String \cf5 name\cf2 ) \{\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf4 name\cf2  = \cf5 name\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  Double getPrice() \{\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 price\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b void\cf2\b0  setPrice(Double \cf5 price\cf2 ) \{\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf4 price\cf2  = \cf5 price\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf3 @Override\cf0\par
+\cf2\tab\cf1\b public\cf2\b0  String toString() \{\cf0\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf6 "Product [id="\cf2  + \cf4 id\cf2  + \cf6 ", name="\cf2  + \cf4 name\cf2  + \cf6 ", price="\cf2  + \cf4 price\cf2  + \cf6 "]"\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\cf2\tab\cf0\par
+\par
+\cf2\}\cf0\par
+\f0\fs22 ====================\par
+package com.training.feign.proxy;\par
+\par
+ import java.util.List;\par
+\par
+import org.springframework.cloud.openfeign.FeignClient;\par
+import org.springframework.http.MediaType;\par
+import org.springframework.web.bind.annotation.DeleteMapping;\par
+import org.springframework.web.bind.annotation.GetMapping;\par
+import org.springframework.web.bind.annotation.PathVariable;\par
+import org.springframework.web.bind.annotation.PostMapping;\par
+import org.springframework.web.bind.annotation.PutMapping;\par
+import org.springframework.web.bind.annotation.RequestBody;\par
+\par
+import com.training.feign.domain.Product;\par
+\par
+ \par
+\par
+@FeignClient("product-service")\par
+public interface ProductProxy \{\par
+\par
+\tab @GetMapping(value = "/products/\{id\}", produces = \{MediaType.APPLICATION_JSON_VALUE\})\par
+\tab Product getProductById(@PathVariable("id") int id);\par
+\tab\par
+\tab @GetMapping(value = "/products", produces = \{MediaType.APPLICATION_JSON_VALUE\})\par
+\tab List<Product> getAllProducts();\par
+\tab /*\par
+\tab @PostMapping(value="/products", produces = \{MediaType.APPLICATION_JSON_VALUE\},\par
+\tab\tab\tab consumes = \{MediaType.APPLICATION_JSON_VALUE\})\par
+\tab Product addProduct(@RequestBody Product product);\par
+\tab\par
+\tab @PutMapping(value="/products", produces = \{MediaType.APPLICATION_JSON_VALUE\},\par
+\tab\tab\tab consumes = \{MediaType.APPLICATION_JSON_VALUE\})\par
+\tab Product updateProduct(@RequestBody Product product);\par
+\tab\par
+\tab @DeleteMapping(value = "/products/\{id\}")\par
+\tab void deleteProductById(@PathVariable("id") int id);\par
+\tab */\par
+\}\par
+\par
+===========================\par
+\cf2\f1\fs20 spring.application.name=\cf13 product-feign\cf0\par
+\par
+\par
+\cf2 server.port=\cf13 9996\cf0\par
+\cf2 eureka.client.serviceUrl.defaultZone=\cf13 http://localhost:8761/eureka\cf0\par
+\cf2 eureka.client.register-with-eureka=\cf13 false\cf0\par
+\f0\fs22 =========================\par
+\cf2\f1\fs20 <\cf10 dependencies\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.boot</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 artifactId\cf2 >spring-boot-starter-actuator</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.boot</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 artifactId\cf2 >spring-boot-starter-web</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.cloud</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 artifactId\cf2 >spring-cloud-starter-netflix-eureka-client</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.cloud</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 artifactId\cf2 >spring-cloud-starter-openfeign</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependency\cf2 >\cf0\par
+\par
+\cf2\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.boot</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 artifactId\cf2 >spring-boot-starter-test</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 scope\cf2 >test</\cf10 scope\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependency\cf2 >\cf0\par
+\cf2\tab </\cf10 dependencies\cf2 >\cf0\par
+\cf2\tab <\cf10 dependencyManagement\cf2 >\cf0\par
+\cf2\tab\tab <\cf10 dependencies\cf2 >\cf0\par
+\cf2\tab\tab\tab <\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab\tab\tab <\cf10 groupId\cf2 >org.springframework.cloud</\cf10 groupId\cf2 >\cf0\par
+\cf2\tab\tab\tab\tab <\cf10 artifactId\cf2 >spring-cloud-dependencies</\cf10 artifactId\cf2 >\cf0\par
+\cf2\tab\tab\tab\tab <\cf10 version\cf2 >$\{spring-cloud.version\}</\cf10 version\cf2 >\cf0\par
+\cf2\tab\tab\tab\tab <\cf10 type\cf2 >pom</\cf10 type\cf2 >\cf0\par
+\cf2\tab\tab\tab\tab <\cf10 scope\cf2 >import</\cf10 scope\cf2 >\cf0\par
+\cf2\tab\tab\tab </\cf10 dependency\cf2 >\cf0\par
+\cf2\tab\tab </\cf10 dependencies\cf2 >\par
+\f2\lang1033 =============================\cf0\f0\fs22\lang9\par
+---------------------------------------------------------\par
+\par
+{{\field{\*\fldinst{HYPERLINK https://microservices.io/patterns/reliability/circuit-breaker.html }}{\fldrslt{https://microservices.io/patterns/reliability/circuit-breaker.html\ul0\cf0}}}}\f0\fs22\par
+\par
+---------------------------------------------------------\par
+\par
+service-to-service call:\par
+\par
+1) Ribbon (RestTemplate)\par
+- @HystrixCommand(fallbackMethod="")\par
+\par
+2) OpenFeign \par
+- @FeignClient(name="product-service",\par
+fallback=ProductServiceProxyImpl.class)\par
+---------------------------------------------------------\par
+\par
+}
+ 
